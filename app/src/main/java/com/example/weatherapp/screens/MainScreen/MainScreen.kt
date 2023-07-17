@@ -19,7 +19,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,15 +39,22 @@ import com.example.weatherapp.utils.formatDecimals
 import com.example.weatherapp.widgets.CustomAppBar
 import com.example.weatherapp.screens.MainScreen.widgets.HumidityWindPressureRow
 import com.example.weatherapp.screens.MainScreen.widgets.WeatherDetailRow
+import com.example.weatherapp.screens.SettingsScreen.SettingsViewModel
 import com.example.weatherapp.widgets.WeatherStateImage
 import com.example.weatherapp_compose.navigation.WeatherScreens
 
 @Composable
-fun MainScreen(navController: NavController, mainViewModel: MainViewModel = hiltViewModel(), city:String?) {
+fun MainScreen(
+    navController: NavController,
+    mainViewModel: MainViewModel = hiltViewModel(),
+    settingsViewModel: SettingsViewModel = hiltViewModel(), city: String?
+) {
+    val unitFromDb = settingsViewModel.unit.collectAsState().value.unit
+
     val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
         initialValue = DataOrException(loading = true)
     ) {
-        value = mainViewModel.getWeatherData(city ?: "Seattle")
+        value = mainViewModel.getWeatherData(city ?: "Seattle", unitSystem = unitFromDb)
     }.value
     if (weatherData.loading == true) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -65,7 +75,7 @@ fun MainScaffold(weather: Weather, navController: NavController) {
             CustomAppBar(
                 title = weather.city.name + ", ${weather.city.country}",
                 navController = navController,
-                icon = null,
+
                 isMainScreen = true,
                 onAddActionClicked = {
                     navController.navigate(WeatherScreens.SearchScreen.name)

@@ -1,6 +1,5 @@
 *.iml
 .gradle
-/app/src/main/java/com/example/weatherapp/utils/Constants.kt
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -14,3 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+app/src/main/java/com/example/weatherapp/utils/Constants.kt

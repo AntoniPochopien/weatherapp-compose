@@ -11,8 +11,8 @@ import kotlin.Exception
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: WeatherRepository) : ViewModel() {
 
-    suspend fun getWeatherData(city: String): DataOrException<Weather, Boolean, Exception>{
-        return  repository.getWeather(cityQuery = city)
+    suspend fun getWeatherData(city: String, unitSystem: String): DataOrException<Weather, Boolean, Exception>{
+        return  repository.getWeather(cityQuery = city, unitSystem = unitSystem)
     }
 
 }
